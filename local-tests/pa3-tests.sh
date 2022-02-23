@@ -40,28 +40,28 @@ remake
 #echo -e "\nTest cases for BoundedBuffer"
 
 echo -e "\nTesting :: ./test-files/tester < test-files/test_single_msg.txt\n"
-if timeout 15 ./test-files/tester < test-files/test_single_msg.txt >/dev/null 2>&1; then
+if timeout 20 ./test-files/tester < test-files/test_single_msg.txt >/dev/null 2>&1; then
     echo -e "  ${GREEN}Passed${NC}"
 else
     echo -e "  ${RED}Failed${NC}"
 fi
 
 echo -e "\nTesting :: ./test-files/tester < test-files/test_push_synch.txt\n"
-if timeout 15 ./test-files/tester < test-files/test_push_synch.txt >/dev/null 2>&1; then
+if timeout 20 ./test-files/tester < test-files/test_push_synch.txt >/dev/null 2>&1; then
     echo -e "  ${GREEN}Passed${NC}"
 else
     echo -e "  ${RED}Failed${NC}"
 fi
 
 echo -e "\nTesting :: ./test-files/tester < test-files/test_pop_synch.txt\n"
-if timeout 15 ./test-files/tester < test-files/test_pop_synch.txt >/dev/null 2>&1; then
+if timeout 40 ./test-files/tester < test-files/test_pop_synch.txt >/dev/null 2>&1; then
     echo -e "  ${GREEN}Passed${NC}"
 else
     echo -e "  ${RED}Failed${NC}"
 fi
 
 echo -e "\nTesting :: ./test-files/tester < test-files/test_both_synch.txt\n"
-if timeout 15 ./test-files/tester < test-files/test_both_synch.txt >/dev/null 2>&1; then
+if timeout 60 ./test-files/tester < test-files/test_both_synch.txt >/dev/null 2>&1; then
     echo -e "  ${GREEN}Passed${NC}"
 else
     echo -e "  ${RED}Failed${NC}"

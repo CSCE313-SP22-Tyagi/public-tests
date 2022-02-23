@@ -27,7 +27,7 @@
       "input": "",
       "output": "",
       "comparison": "included",
-      "timeout": 1,
+      "timeout": 1.5,
       "points": 6
     },
     {
@@ -37,7 +37,7 @@
       "input": "",
       "output": "",
       "comparison": "included",
-      "timeout": 1,
+      "timeout": 2,
       "points": 8
     },
     {
