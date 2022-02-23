@@ -1,5 +1,4 @@
-//1<bbcap<4
-//nthrd>=5
+b 3 s 256 n 5 0
 
 pop
 push

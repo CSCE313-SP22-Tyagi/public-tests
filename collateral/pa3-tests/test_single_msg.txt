@@ -1,4 +1,4 @@
-//defaults
+s 256 0
 
 push
 pop

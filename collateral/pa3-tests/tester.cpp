@@ -1,4 +1,3 @@
-#include <getopt.h>
 #include <stdlib.h>
 
 #include <iostream>
@@ -66,32 +65,32 @@ void pop_thread_function (int size, BoundedBuffer* bb, vector<char*>* words) {
     delete[] wrd;
 }
 
-int main (int argc, char** argv) {
+int main () {
     int bbcap = CAP;
     int wsize = SIZE;
     int nthrd = NUM;
 
-    // CLI option to change BoundedBuffer capacity, word size, and number of threads
-    int opt;
-    static struct option long_options[] = {
-        {"bbcap", required_argument, nullptr, 'b'},
-        {"wsize", required_argument, nullptr, 's'},
-        {"nthrd", required_argument, nullptr, 'n'},
-        {0, 0, 0, 0}
-    };
-    while ((opt = getopt_long(argc, argv, "b:s:n:", long_options, nullptr)) != -1) {
+    // change BoundedBuffer capacity, word size, and number of threads
+    char opt;
+    int val;
+    while (cin >> opt) {
+        if (opt == 0) {
+            break;
+        }
+        cin >> val;
         switch (opt) {
             case 'b':
-                bbcap = atoi(optarg);
+                bbcap = val;
                 break;
             case 's':
-                wsize = atoi(optarg);
+                wsize = val;
                 break;
             case 'n':
-                nthrd = atoi(optarg);
+                nthrd = val;
                 break;
         }
     }
+    cerr << bbcap << " " << wsize << " " << nthrd << endl;
 
     // initialize overhead
     srand(time(nullptr));

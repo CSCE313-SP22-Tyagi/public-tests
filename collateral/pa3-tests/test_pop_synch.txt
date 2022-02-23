@@ -1,4 +1,4 @@
-//nthrd>=3
+s 256 n 3 0
 
 pop
 pop
