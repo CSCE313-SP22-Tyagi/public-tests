@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Histogram",
+      "setup": "mkdir received >/dev/null 2>&1; make -s clean; make -s >/dev/null 2>&1",
+      "run": "N=10000; P=10; [ $(./client -n ${N} -p ${P} -w 100 -h 20 | grep -oFw ${N} | wc -l) -eq ${P} ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 30
+    },
+    {
+      "name": "CSV File Transfer",
+      "setup": "mkdir received >/dev/null 2>&1; make -s clean; make -s >/dev/null 2>&1",
+      "run": "./client -w 100 -f 1.csv >/dev/null 2>&1; diff BIMDC/1.csv received/1.csv >/dev/null",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 15
+    },
+    {
+      "name": "CSV File Transfer",
+      "setup": "mkdir received >/dev/null 2>&1; make -s clean; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
+      "run": "./client -w 100 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 15
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+ps aux > a
+grep /usr < a
+grep /usr < a > b

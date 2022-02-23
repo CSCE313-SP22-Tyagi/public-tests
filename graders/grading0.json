@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Test compile",
+      "setup": "g++ buggy.cpp",
+      "run": "ls -la | grep a.out",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 34
+    },
+    {
+      "name": "Test output",
+      "setup": "g++ buggy.cpp",
+      "run": "./a.out > out.txt; grep 2 out.txt && grep 4 out.txt",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 33
+    },
+    {
+      "name": "Test that there are no memory leaks",
+      "setup": "g++ -fsanitize=address,undefined buggy.cpp",
+      "run": "./a.out",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 33
+    }
+  ]
+}
