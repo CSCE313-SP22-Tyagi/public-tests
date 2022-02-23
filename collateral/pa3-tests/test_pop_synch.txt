@@ -1,0 +1,6 @@
+pop 0
+pop 1
+push 0
+push 1
+push 2
+pop 2

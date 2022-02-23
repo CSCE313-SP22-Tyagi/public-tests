@@ -8,8 +8,8 @@
 
 #include "BoundedBuffer.h"
 
-#define CAP 10
-#define SIZE 15
+#define CAP 5
+#define SIZE 16
 #define NUM 1
 
 using namespace std;
@@ -106,7 +106,7 @@ int main (int argc, char** argv) {
     }
 
     vector<char*> words;
-    int count = 0;
+    size_t count = 0;
 
     // process commands to test
     string type;
@@ -138,9 +138,10 @@ int main (int argc, char** argv) {
         delete pop_thrds[i];
     }
 
+    cerr << count << " " << words.size() << " " << bb.size() << endl;
     // determining exit status
     int status = 0;
-    if ((size_t) count != words.size()) {
+    if (count != words.size() || count != bb.size()) {
         status = 1;
     }
 
