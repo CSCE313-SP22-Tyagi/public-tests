@@ -106,22 +106,42 @@ int main (int argc, char** argv) {
     }
 
     vector<char*> words;
-    size_t count = 0;
+    int count = 0;
 
     // process commands to test
     string type;
-    int thrd;
-    while (cin >> type >> thrd) {
+    int idx_push = 0;
+    int idx_pop = 0;
+    while (cin >> type) {
         if (type == "push") {
-            char* wrd = new char[wsize];
-            make_word(wrd, wsize);
-            add_word(&words, wrd);
-            push_thrds[thrd] = new thread(push_thread_function, wrd, wsize, &bb);
-            count++;
+            if (idx_push < nthrd) {
+                char* wrd = new char[wsize];
+                make_word(wrd, wsize);
+                add_word(&words, wrd);
+                push_thrds[idx_push++] = new thread(push_thread_function, wrd, wsize, &bb);
+                count++;
+                if (count > bbcap) {
+                    cerr << "Push thread should block" << endl;
+                }
+            }
+            else {
+                cerr << "Out of push threads to create" << endl;
+            }
         }
         else if (type == "pop") {
-            pop_thrds[thrd] = new thread(pop_thread_function, wsize, &bb, &words);
-            count--;
+            if (idx_pop < nthrd) {
+                pop_thrds[idx_pop++] = new thread(pop_thread_function, wsize, &bb, &words);
+                count--;
+                if (count < 0) {
+                    cerr << "Pop thread should block" << endl;
+                }
+            }
+            else {
+                cerr << "Out of pop threads to create" << endl;
+            }
+        }
+        else {
+            cerr << "Invalid command :: " << type << endl;
         }
     }
 
@@ -141,7 +161,7 @@ int main (int argc, char** argv) {
     cerr << count << " " << words.size() << " " << bb.size() << endl;
     // determining exit status
     int status = 0;
-    if (count != words.size() || count != bb.size()) {
+    if ((size_t) count != words.size() || (size_t) count != bb.size()) {
         status = 1;
     }
 
