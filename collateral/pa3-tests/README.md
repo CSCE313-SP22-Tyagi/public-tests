@@ -6,6 +6,7 @@ To run:
 ```bash
 $ make
 
+# each option is optional - defaults represented for convience
 # input-file is optional - can also just use stdin
-$ ./tester -b <bbcap> -s <wrdsize> -n <numthrds> [< <input-file>]
+$ ./tester [-b <bbcap=5> -s <wrdsize=16> -n <numthrds=1> < <input-file>]
 ```
