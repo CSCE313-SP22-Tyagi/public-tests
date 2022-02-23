@@ -2,7 +2,7 @@
   "tests": [
     {
       "name": "BoundedBuffer - Single Message",
-      "setup": "make -C test-files/ -s >/dev/null 2>&1",
+      "setup": "cp BoundedBuffer.* test-files/; make -C test-files/ -s >/dev/null 2>&1",
       "run": "./test-files/tester < test-files/test_single_msg.txt >/dev/null 2>&1",
       "input": "",
       "output": "",
@@ -12,7 +12,7 @@
     },
     {
       "name": "BoundedBuffer - Conflicting Pushes",
-      "setup": "make -C test-files/ -s >/dev/null 2>&1",
+      "setup": "cp BoundedBuffer.* test-files/; make -C test-files/ -s >/dev/null 2>&1",
       "run": "./test-files/tester < test-files/test_push_synch.txt >/dev/null 2>&1",
       "input": "",
       "output": "",
@@ -22,7 +22,7 @@
     },
     {
       "name": "BoundedBuffer - Conflicting Pops",
-      "setup": "make -C test-files/ -s >/dev/null 2>&1",
+      "setup": "cp BoundedBuffer.* test-files/; make -C test-files/ -s >/dev/null 2>&1",
       "run": "./test-files/tester < test-files/test_pop_synch.txt >/dev/null 2>&1",
       "input": "",
       "output": "",
@@ -32,7 +32,7 @@
     },
     {
       "name": "BoundedBuffer - Conflicting Pushes/Pops",
-      "setup": "make -C test-files/ -s >/dev/null 2>&1",
+      "setup": "cp BoundedBuffer.* test-files/; make -C test-files/ -s >/dev/null 2>&1",
       "run": "./test-files/tester < test-files/test_both_synch.txt >/dev/null 2>&1",
       "input": "",
       "output": "",
