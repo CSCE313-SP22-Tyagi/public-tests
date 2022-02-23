@@ -14,27 +14,34 @@
 
 using namespace std;
 
+// fill char buffer with random values
 void make_word (char* buf, int size) {
     for (int i = 0; i < size; i++) {
         buf[i] = (rand() % 256) - 128;
     }
 }
 
+// mutex for synchronization of vector
 mutex mtx;
+
+// add element to vector
 void add_word (vector<char*>* words, char* wrd) {
     mtx.lock();
     words->push_back(wrd);
     mtx.unlock();
 }
 
+// thread to push char buffer to BoundedBuffer
 void push_thread_function (char* wrd, int size, BoundedBuffer* bb) {
     bb->push(wrd, size);
 }
 
+// thread to pop char buffer from BoundedBuffer
 void pop_thread_function (int size, BoundedBuffer* bb, vector<char*>* words) {
     char* wrd = new char[size];
     int read = bb->pop(wrd, size);
     if (read != size) {
+        delete[] wrd;
         return;
     }
 
