@@ -1,0 +1,94 @@
+{
+  "tests": [
+    {
+      "name": "BoundedBuffer - Single Message",
+      "setup": "make -C test-files/",
+      "run": "./test-files/tester < test-files/test_single_msg.txt",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 5
+    },
+    {
+      "name": "BoundedBuffer - Conflicting Pushes",
+      "setup": "make -C test-files/",
+      "run": "./test-files/tester < test-files/test_push_synch.txt",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 6
+    },
+    {
+      "name": "BoundedBuffer - Conflicting Pops",
+      "setup": "make -C test-files/",
+      "run": "./test-files/tester < test-files/test_pop_synch.txt",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 6
+    },
+    {
+      "name": "BoundedBuffer - Conflicting Pushes/Pops",
+      "setup": "make -C test-files/",
+      "run": "./test-files/tester < test-files/test_both_synch.txt",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 8
+    },
+    {
+      "name": "Histogram (1)",
+      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "run": "N=1000; P=5; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 10
+    },
+    {
+      "name": "Histogram (2)",
+      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "run": "N=10000; P=10; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 30 | grep -oFw ${N} | wc -l) -eq ${P} ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 10
+    },
+    {
+      "name": "CSV File Transfer",
+      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1",
+      "run": "./client -w 100 -b 30 -f 1.csv >/dev/null 2>&1; diff BIMDC/1.csv received/1.csv >/dev/null",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 5
+    },
+    {
+      "name": "Binary File Transfer",
+      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
+      "run": "./client -w 100 -b 50 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 5
+    },
+    {
+      "name": "File Transfer - Large Message Capacity",
+      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
+      "run": "./client -w 100 -b 50 -m 8192 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 5
+    }
+  ]
+}
