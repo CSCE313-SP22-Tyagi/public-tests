@@ -1,2 +1,5 @@
 # solutions
 pa3-tests/BoundedBuffer.*
+
+# executables
+pa3-tests/tester
