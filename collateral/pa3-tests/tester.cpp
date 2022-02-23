@@ -158,8 +158,8 @@ int main (int argc, char** argv) {
         delete pop_thrds[i];
     }
 
-    cerr << count << " " << words.size() << " " << bb.size() << endl;
     // determining exit status
+    cerr << count << " " << words.size() << " " << bb.size() << endl;
     int status = 0;
     if ((size_t) count != words.size() || (size_t) count != bb.size()) {
         status = 1;

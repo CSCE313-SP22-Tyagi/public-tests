@@ -1,4 +1,4 @@
-//bbcap>2
+//1<bbcap<4
 //nthrd>=5
 
 pop
