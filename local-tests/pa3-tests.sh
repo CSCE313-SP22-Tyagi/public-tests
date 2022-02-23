@@ -3,8 +3,8 @@
 # function to clean up files and make executables
 remake () {
     #echo -e "\nCleaning old files and making executables"
-    make -s clean
     make -s >/dev/null 2>&1
+    make -C test-files/ -s >/dev/null 2>&1
 }
 
 # function to check for IPC files
@@ -71,10 +71,20 @@ fi
 remake
 #echo -e "\nTest cases for datapoint transfers"
 
-echo -e "\nTesting :: ./client -n 10000 -p 10 -w 100 -h 20\n"
+echo -e "\nTesting :: ./client -n 1000 -p 5 -w 100 -h 20 -b 5\n"
+N=1000
+P=5
+if [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]; then
+    echo -e "  ${GREEN}Passed${NC}"
+else
+    echo -e "  ${RED}Failed${NC}"
+fi
+checkclean "f"
+
+echo -e "\nTesting :: ./client -n 10000 -p 10 -w 100 -h 20 -b 30\n"
 N=10000
 P=10
-if [ $(./client -n ${N} -p ${P} -w 100 -h 20 | grep -oFw ${N} | wc -l) -eq ${P} ]; then
+if [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 30 | grep -oFw ${N} | wc -l) -eq ${P} ]; then
     echo -e "  ${GREEN}Passed${NC}"
 else
     echo -e "  ${RED}Failed${NC}"
@@ -85,8 +95,8 @@ checkclean "f"
 remake
 #echo -e "\nTest cases for csv file transfers"
 
-echo -e "\nTesting :: ./client -w 100 -f 1.csv; diff -sqwB BIMDC/1.csv received/1.csv\n"
-./client -w 100 -f 1.csv >/dev/null 2>&1
+echo -e "\nTesting :: ./client -w 100 -b 30 -f 1.csv; diff -sqwB BIMDC/1.csv received/1.csv\n"
+./client -w 100 -b 30 -f 1.csv >/dev/null 2>&1
 if test -f "received/1.csv"; then
     if diff BIMDC/1.csv received/1.csv >/dev/null; then
         echo -e "  ${GREEN}Passed${NC}"
@@ -102,9 +112,23 @@ checkclean "f"
 remake
 #echo -e "\nTest cases for binary file transfers"
 
-echo -e "\nTesting :: truncate -s 256K BIMDC/test.bin; ./client -w 100 -f test.bin; diff -sqwB BIMDC/test.bin received/test.bin\n"
+echo -e "\nTesting :: truncate -s 256K BIMDC/test.bin; ./client -w 100 -b 50 -f test.bin; diff -sqwB BIMDC/test.bin received/test.bin\n"
 truncate -s 256K BIMDC/test.bin
-./client -w 100 -f test.bin >/dev/null 2>&1
+./client -w 100 -b 50 -f test.bin >/dev/null 2>&1
+if test -f "received/test.bin"; then
+    if diff BIMDC/test.bin received/test.bin >/dev/null; then
+        echo -e "  ${GREEN}Passed${NC}"
+    else
+        echo -e "  ${RED}Failed${NC}"
+    fi
+else
+    echo -e "  ${ORANGE}No test.bin in received/ directory${NC}"
+fi
+checkclean "f"
+
+echo -e "\nTesting :: truncate -s 256K BIMDC/test.bin; ./client -w 100 -b 50 -m 8192 -f test.bin; diff -sqwB BIMDC/test.bin received/test.bin\n"
+truncate -s 256K BIMDC/test.bin
+./client -w 100 -b 50 -m 8192 -f test.bin >/dev/null 2>&1
 if test -f "received/test.bin"; then
     if diff BIMDC/test.bin received/test.bin >/dev/null; then
         echo -e "  ${GREEN}Passed${NC}"
