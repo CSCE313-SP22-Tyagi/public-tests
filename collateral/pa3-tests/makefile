@@ -21,4 +21,4 @@ all: clean $(BINS)
 .PHONY: clean
 
 clean:
-	rm -f tester
+	rm -f tester *.o

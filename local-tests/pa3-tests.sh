@@ -37,6 +37,38 @@ fi
 
 
 remake
+#echo -e "\nTest cases for BoundedBuffer"
+
+echo -e "\nTesting :: ./test-files/tester -s 256 < test-files/test_single_msg.txt\n"
+if timeout 15 ./test-files/tester -s 256 < test-files/test_single_msg.txt >/dev/null 2>&1; then
+    echo -e "  ${GREEN}Passed${NC}"
+else
+    echo -e "  ${RED}Failed${NC}"
+fi
+
+echo -e "\nTesting :: ./test-files/tester -b 3 -s 256 -n 5 < test-files/test_push_synch.txt\n"
+if timeout 15 ./test-files/tester -b 3 -s 256 -n 5 < test-files/test_push_synch.txt >/dev/null 2>&1; then
+    echo -e "  ${GREEN}Passed${NC}"
+else
+    echo -e "  ${RED}Failed${NC}"
+fi
+
+echo -e "\nTesting :: ./test-files/tester -s 256 -n 3 < test-files/test_pop_synch.txt\n"
+if timeout 15 ./test-files/tester -s 256 -n 3 < test-files/test_pop_synch.txt >/dev/null 2>&1; then
+    echo -e "  ${GREEN}Passed${NC}"
+else
+    echo -e "  ${RED}Failed${NC}"
+fi
+
+echo -e "\nTesting :: ./test-files/tester -b 3 -s 256 -n 5 < test-files/test_both_synch.txt\n"
+if timeout 15 ./test-files/tester -b 3 -s 256 -n 5 < test-files/test_both_synch.txt >/dev/null 2>&1; then
+    echo -e "  ${GREEN}Passed${NC}"
+else
+    echo -e "  ${RED}Failed${NC}"
+fi
+
+
+remake
 #echo -e "\nTest cases for datapoint transfers"
 
 echo -e "\nTesting :: ./client -n 10000 -p 10 -w 100 -h 20\n"

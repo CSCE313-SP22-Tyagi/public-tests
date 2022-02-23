@@ -21,8 +21,11 @@ all: clean $(BINS)
 .PHONY: clean test
 
 clean:
+	make -C test-files/ clean
 	rm -f server client fifo* data*_* *.tst *.o *.csv received/*
 
 test: all
+	cp BoundedBuffer.* test-files/
+	make -C test-files/
 	chmod u+x pa3-tests.sh
 	./pa3-tests.sh
