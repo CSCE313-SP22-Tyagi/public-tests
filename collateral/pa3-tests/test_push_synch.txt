@@ -1,12 +1,13 @@
-b 3 s 256 n 5 0
+b 3 s 256 n 5
+l 0 u 2 0
 
-push
-push
-push
-push
-pop
-push
-pop
-pop
-pop
-pop
+push 2
+push 2
+push 1
+push 1
+pop 1
+push 2
+pop 2
+pop 1
+pop 2
+pop 2

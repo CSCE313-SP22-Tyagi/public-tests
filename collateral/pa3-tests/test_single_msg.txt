@@ -1,4 +1,5 @@
-s 256 0
+s 256
+l 0 u 1 0
 
-push
-pop
+push 1
+pop 1

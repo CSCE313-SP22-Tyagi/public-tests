@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <mutex>
@@ -10,6 +11,8 @@
 #define CAP 5
 #define SIZE 16
 #define NUM 1
+#define MIN_SLEEP 0
+#define MAX_SLEEP 1
 
 using namespace std;
 
@@ -30,20 +33,8 @@ void add_word (vector<char*>* words, char* wrd) {
     mtx.unlock();
 }
 
-// thread to push char buffer to BoundedBuffer
-void push_thread_function (char* wrd, int size, BoundedBuffer* bb) {
-    bb->push(wrd, size);
-}
-
-// thread to pop char buffer from BoundedBuffer
-void pop_thread_function (int size, BoundedBuffer* bb, vector<char*>* words) {
-    char* wrd = new char[size];
-    int read = bb->pop(wrd, size);
-    if (read != size) {
-        delete[] wrd;
-        return;
-    }
-
+// remove element from vector
+void remove_word (vector<char*>* words, char* wrd, int size) {
     mtx.lock();
     for (vector<char*>::iterator iter = words->begin(); iter != words->end(); ++iter) {
         char* cur = *iter;
@@ -61,20 +52,49 @@ void pop_thread_function (int size, BoundedBuffer* bb, vector<char*>* words) {
         }
     }
     mtx.unlock();
+}
 
-    delete[] wrd;
+// thread to push count char buffers to BoundedBuffer
+void push_thread_function (int count, int min, int max, int size, vector<char*>* words, BoundedBuffer* bb) {
+    for (int i = 0; i < count; i++) {
+        sleep((rand() % ((max+1)-min)) + min);
+
+        char* wrd = new char[size];
+        make_word(wrd, size);
+        add_word(words, wrd);
+
+        bb->push(wrd, size);
+    }
+}
+
+// thread to pop count char buffers from BoundedBuffer
+void pop_thread_function (int count, int min, int max, int size, BoundedBuffer* bb, vector<char*>* words) {
+    for (int i = 0; i < count; i++) {
+        sleep((rand() % ((max+1)-min)) + min);
+
+        char* wrd = new char[size];
+        int read = bb->pop(wrd, size);
+
+        if (read == size) {
+            remove_word(words, wrd, size);
+        }
+
+        delete[] wrd;
+    }
 }
 
 int main () {
     int bbcap = CAP;
     int wsize = SIZE;
     int nthrd = NUM;
+    int lower = MIN_SLEEP;
+    int upper = MAX_SLEEP;
 
-    // change BoundedBuffer capacity, word size, and number of threads
+    // change BoundedBuffer capacity, word size, number of threads, and sleep range
     char opt;
     int val;
     while (cin >> opt) {
-        if (opt == 0) {
+        if (opt == '0') {
             break;
         }
         cin >> val;
@@ -88,9 +108,34 @@ int main () {
             case 'n':
                 nthrd = val;
                 break;
+            case 'l':
+                lower = val;
+                break;
+            case 'u':
+                upper = val;
+                break;
+            default:
+                cerr << "Invalid option - " << opt << endl;
+                break;
         }
     }
-    cerr << bbcap << " " << wsize << " " << nthrd << endl;
+    // validate values
+    if (bbcap < 1) {
+        bbcap = CAP;
+    }
+    if (wsize < 1) {
+        wsize = SIZE;
+    }
+    if (nthrd < 1) {
+        nthrd = NUM;
+    }
+    if (lower <= 0 || lower >= upper) {
+        lower = MIN_SLEEP;
+    }
+    if (upper <= lower) {
+        upper = lower+1;
+    }
+    cerr << "bbcap: " << bbcap << ", wsize: " << wsize << ", nthrd: " << nthrd << ", lower: " << lower << ", upper: " << upper << endl;
 
     // initialize overhead
     srand(time(nullptr));
@@ -109,16 +154,19 @@ int main () {
 
     // process commands to test
     string type;
+    int reqs = 0;
     int idx_push = 0;
     int idx_pop = 0;
-    while (cin >> type) {
+    while (cin >> type >> reqs) {
+        if (reqs <= 0) {
+            cerr << "Invalid number of requests; not processing command" << endl;
+            continue;
+        }
+
         if (type == "push") {
             if (idx_push < nthrd) {
-                char* wrd = new char[wsize];
-                make_word(wrd, wsize);
-                add_word(&words, wrd);
-                push_thrds[idx_push++] = new thread(push_thread_function, wrd, wsize, &bb);
-                count++;
+                push_thrds[idx_push++] = new thread(push_thread_function, reqs, lower, upper, wsize, &words, &bb);
+                count += reqs;
                 if (count > bbcap) {
                     cerr << "Push thread should block" << endl;
                 }
@@ -129,8 +177,8 @@ int main () {
         }
         else if (type == "pop") {
             if (idx_pop < nthrd) {
-                pop_thrds[idx_pop++] = new thread(pop_thread_function, wsize, &bb, &words);
-                count--;
+                pop_thrds[idx_pop++] = new thread(pop_thread_function, reqs, lower, upper, wsize, &bb, &words);
+                count -= reqs;
                 if (count < 0) {
                     cerr << "Pop thread should block" << endl;
                 }
@@ -142,6 +190,20 @@ int main () {
         else {
             cerr << "Invalid command :: " << type << endl;
         }
+    }
+
+    // verify input consumed
+    if (!cin.eof()) {
+        cerr << "Invalid input" << endl;
+
+        // clean-up head allocated memory
+        for (auto wrd : words) {
+            delete[] wrd;
+        }
+        delete[] push_thrds;
+        delete[] pop_thrds;
+
+        return 1;
     }
 
     // joining all threads
