@@ -42,7 +42,7 @@
     },
     {
       "name": "Histogram (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "setup": "make",
       "run": "N=1000; P=5; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]",
       "input": "",
       "output": "",
@@ -52,7 +52,7 @@
     },
     {
       "name": "Histogram (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "setup": "make",
       "run": "N=10000; P=10; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 30 | grep -oFw ${N} | wc -l) -eq ${P} ]",
       "input": "",
       "output": "",
@@ -62,8 +62,8 @@
     },
     {
       "name": "CSV File Transfer",
-      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1",
-      "run": "./client -w 100 -b 30 -f 1.csv >/dev/null 2>&1; diff BIMDC/1.csv received/1.csv >/dev/null",
+      "setup": "mkdir received; make",
+      "run": "./client -w 100 -b 30 -f 1.csv; diff BIMDC/1.csv received/1.csv",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -72,8 +72,8 @@
     },
     {
       "name": "Binary File Transfer",
-      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./client -w 100 -b 50 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
+      "setup": "mkdir received; make; truncate -s 256K BIMDC/test.bin",
+      "run": "./client -w 100 -b 50 -f test.bin; diff BIMDC/test.bin received/test.bin",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -82,8 +82,8 @@
     },
     {
       "name": "File Transfer - Large Message Capacity",
-      "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./client -w 100 -b 50 -m 8192 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
+      "setup": "mkdir received; make; truncate -s 256K BIMDC/test.bin",
+      "run": "./client -w 100 -b 50 -m 8192 -f test.bin; diff BIMDC/test.bin received/test.bin",
       "input": "",
       "output": "",
       "comparison": "included",

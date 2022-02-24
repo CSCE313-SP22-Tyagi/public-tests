@@ -42,7 +42,7 @@
     },
     {
       "name": "Histogram (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "setup": "make -s >/dev/null 2>&1",
       "run": "N=1000; P=5; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]",
       "input": "",
       "output": "",
@@ -52,7 +52,7 @@
     },
     {
       "name": "Histogram (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
+      "setup": "make -s >/dev/null 2>&1",
       "run": "N=10000; P=10; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 30 | grep -oFw ${N} | wc -l) -eq ${P} ]",
       "input": "",
       "output": "",
