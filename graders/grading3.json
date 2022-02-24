@@ -83,7 +83,7 @@
     {
       "name": "File Transfer - Large Message Capacity",
       "setup": "mkdir received >/dev/null 2>&1; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./client -w 100 -b 50 -m 8192 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
+      "run": "./client -w 100 -b 50 -m 4096 -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
       "input": "",
       "output": "",
       "comparison": "included",
