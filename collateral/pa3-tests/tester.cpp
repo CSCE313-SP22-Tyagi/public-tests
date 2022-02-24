@@ -57,11 +57,11 @@ void remove_word (vector<char*>* words, char* wrd, int size) {
 // thread to push count char buffers to BoundedBuffer
 void push_thread_function (int count, int min, int max, int size, vector<char*>* words, BoundedBuffer* bb) {
     for (int i = 0; i < count; i++) {
-        sleep((rand() % ((max+1)-min)) + min);
-
         char* wrd = new char[size];
         make_word(wrd, size);
         add_word(words, wrd);
+
+        sleep((rand() % ((max+1)-min)) + min);
 
         bb->push(wrd, size);
     }
