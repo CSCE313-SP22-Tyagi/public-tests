@@ -2,7 +2,7 @@
   "tests": [
     {
       "name": "echo \"Hello world | Life is Good > Great $\"",
-      "setup": "mak; cat ./test-files/test_echo_double.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "setup": "make; cat ./test-files/test_echo_double.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
       "run": "export USER=user; RES=$(. ./test-files/test_echo_double.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
       "input": "",
       "output": "",
