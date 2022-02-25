@@ -1,0 +1,114 @@
+{
+  "tests": [
+    {
+      "name": "echo \"Hello world | Life is Good > Great $\"",
+      "setup": "mak; cat ./test-files/test_echo_double.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_echo_double.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 2
+    },
+    {
+      "name": "ls",
+      "setup": "make; cat ./test-files/test_ls.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_ls.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 2
+    },
+    {
+      "name": "ls -l /usr/bin",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_ls_l_usr_bin.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_ls_l_usr_bin.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 2
+    },
+    {
+      "name": "ls -l -a",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_ls_l_a.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_ls_l_a.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 2
+    },
+    {
+      "name": "ps aux",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_ps_aux.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_ps_aux.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; cat temp; grep -F -- \"${RES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 2
+    },
+    {
+      "name": "ps aux > a; grep /usr < a; grep /usr < a > b",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_input_output_redirection.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_input_output_redirection.txt); rm -f a b; ./shell < ./test-files/cmd.txt >temp 2>/dev/null; grep -qF -- \"${RES}\" temp && [ -f a ] && [ -f b ] && grep -q \"${RES}\" b",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 12
+    },
+    {
+      "name": "ls -l | grep \"shell.cpp\"",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_single_pipe.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_single_pipe.txt); NOTRES=$(ls -l | grep \"Tokenizer.cpp\"); strace -e trace=execve -f -o out.trace ./shell < ./test-files/cmd.txt >temp 2>/dev/null; grep -q 'execve(\"/bin/ls\"' out.trace && grep -q 'execve(\"/bin/grep\"' out.trace && grep -qFw -- \"${RES}\" temp && ! grep -qFw -- \"${NOTRES}\" temp",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 6
+    },
+    {
+      "name": "ps aux | awk '/usr/{print $1}' | sort -r",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_multiple_pipes_A.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_multiple_pipes_A.txt); ARR=($RES); echo \"${RES}\" >cnt.txt; CNT=$(grep -oF -- \"${ARR[0]}\" cnt.txt | wc -l); strace -e trace=execve -f -o out.trace ./shell < ./test-files/cmd.txt >temp 2>/dev/null; grep -q 'execve(\"/bin/ps\"' out.trace && grep -q 'execve(\"/bin/awk\"' out.trace && grep -q 'execve(\"/bin/sort\"' out.trace && grep -qFw -- \"${RES}\" temp && [ $(grep -oFw -- \"${ARR[0]}\" temp | wc -l) -eq ${CNT} ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 4
+    },
+    {
+      "name": "Multiple Pipes & Redirection",
+      "setup": "make; cat ./test-files/test_multiple_pipes_redirection.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; RES=$(. ./test-files/test_multiple_pipes_redirection.txt); echo \"${RES}\" >cnt.txt; CNT=$(grep -oF -- \"${RES}\" cnt.txt | wc -l); rm -f cnt.txt test.txt output.txt; ./shell < ./test-files/cmd.txt >temp 2>/dev/null; echo ${RES}; echo ${CNT}; cat temp test.txt output.txt;  [ $(grep -oFw -- \"${RES}\" temp | wc -l) -eq ${CNT} ] && [ -f test.txt ] && [ -f output.txt ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 12
+    },
+    {
+      "name": "cd ../../",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_cd_A.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; export HOME=$(cd ../../ && pwd); DIR=$(. ./test-files/test_cd_A.txt); ./shell < ./test-files/cmd.txt >temp 2>/dev/null; [ $(grep -oF -- \"${DIR}\" temp | wc -l) -ge 3 ] && [ $(grep -oF -- \"${DIR}/\" temp | wc -l) -le 1 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 3
+    },
+    {
+      "name": "cd -",
+      "setup": "make -s clean; make -s >/dev/null 2>&1; cat ./test-files/test_cd_B.txt ./test-files/test_exit.txt > ./test-files/cmd.txt",
+      "run": "export USER=user; export HOME=$(cd ../../ && pwd); export OLDPWD=$(cd ../../ && pwd); DIR=$(. ./test-files/test_cd_B.txt); TEMPDIR=$(cd /home && pwd); ./shell < ./test-files/cmd.txt >temp 2>/dev/null;[ $(grep -oF -- \"${DIR}\" temp | wc -l) -ge 3 ] && ( [ $(grep -oF -- \"${TEMPDIR}\" temp | wc -l) -le 1 ] || ( grep -qF -- \"${TEMPDIR}/\" <<< \"$DIR\" && [ $(grep -oF -- \"${TEMPDIR}\" temp | wc -l) -gt $(grep -oF -- \"${DIR}\" temp | wc -l) ] ) )",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 0.5,
+      "points": 3
+    }
+  ]
+}
