@@ -24,7 +24,6 @@ all: clean $(BINS)
 .PHONY: clean print-var test
 
 clean:
-	make -C test-files/ clean
 	rm -f server client fifo* data*_* *.tst *.o *.csv received/*
 
 print-var:
