@@ -1,124 +1,24 @@
 {
   "tests": [
     {
-      "name": "Server runs as child",
-      "setup": "mkdir received; make -s clean; make -s >/dev/null 2>&1",
-      "run": "timeout 5 strace -e trace=execve -f -o server.trace ./client -p 1 -t 0.004 -e 1 >/dev/null 2>&1; grep -q 'execve(\"./server\"' server.trace",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 0.25,
-      "points": 15
-    },
-    {
-      "name": "Single datapoint test (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; VAL=$(awk -F, '$1 == \"0.016\" { print $2 }' BIMDC/12.csv); ./client -p 12 -t 0.016 -e 1 | grep -qe ${VAL}",
+      "name": "Set-up make",
+      "setup": "",
+      "run": "MAKETYPE=0; if make SHM; then echo \"SHM success\"; MAKETYPE=3; elif make MQ; then echo \"MQ success\"; MAKETYPE=2; elif make FIFO; then echo \"FIFO success\"; MAKETYPE=1; else echo \"failure\"; fi",
       "input": "",
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 2
+      "points": 0
     },
     {
-      "name": "Single datapoint test (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; VAL=$(awk -F, '$1 == \"59.996\" { print $3 }' BIMDC/5.csv); ./client -p 5 -t 59.996 -e 2 | grep -qe ${VAL}",
+      "name": "Test var",
+      "setup": "",
+      "run": "echo ${MAKETYPE}",
       "input": "",
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 2
-    },
-    {
-      "name": "Multiple datapoint test (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -p 9 >/dev/null 2>&1; head -n 1000 BIMDC/9.csv > test.csv; diff -wB test.csv received/x1.csv >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "Multple datapoint test (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -p 5 >/dev/null 2>&1; head -n 1000 BIMDC/5.csv > test.csv; diff -wB test.csv received/x1.csv >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "CSV file transfer test (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -f 8.csv >/dev/null 2>&1; diff BIMDC/8.csv received/8.csv >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "CSV file transfer test (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -f 2.csv >/dev/null 2>&1; diff BIMDC/2.csv received/2.csv >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "CSV file transfer test (3)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -f 11.csv -m 512 >/dev/null 2>&1; diff BIMDC/11.csv received/11.csv >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 7
-    },
-    {
-      "name": "Binary file transfer test (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -f test.bin >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 2
-    },
-    {
-      "name": "Binary file transfer test (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; ./client -f test.bin -m 512 >/dev/null 2>&1; diff BIMDC/test.bin received/test.bin >/dev/null",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "New channel test (1)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; VAL=$(awk -F, '$1 == \"0.016\" { print $2 }' BIMDC/12.csv); strace -e trace=openat -o trace.tst ./client -c -p 12 -t 0.016 -e 1 >test.tst 2>/dev/null; grep -qe ${VAL} test.tst && grep -q 'openat(AT_FDCWD, \"fifo_data' trace.tst",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 4
-    },
-    {
-      "name": "New channel test (2)",
-      "setup": "make -s clean; make -s >/dev/null 2>&1",
-      "run": "if ! grep -q 'execve(\"./server\"' server.trace; then exit 1; fi; strace -e trace=openat -o trace.tst ./client -c -f 10.csv -m 1024 >/dev/null 2>&1; diff BIMDC/10.csv received/10.csv >/dev/null && grep -q 'openat(AT_FDCWD, \"fifo_data' trace.tst",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": 8
+      "points": 0
     }
   ]
 }

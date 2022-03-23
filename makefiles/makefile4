@@ -6,29 +6,23 @@ LDLIBS=-lrt
 OUT=1
 
 
-SRCS=server.cpp client.cpp
-DEPS=common.cpp RequestChannel.cpp FIFORequestChannel.cpp MQRequestChannel.cpp SHMRequestChannel.cpp
-BINS=$(SRCS:%.cpp=%.exe)
-OBJS=$(DEPS:%.cpp=%.o)
-
-
-all: clean $(BINS)
-
 %.o: %.cpp %.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-%.exe: %.cpp $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(patsubst %.exe,%,$@) $^ $(LDLIBS)
+FIFO: common.o RequestChannel.o FIFORequestChannel.o
+	$(CXX) $(CXXFLAGS) -o server server.cpp $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o client client.cpp $^ $(LDLIBS)
+
+MQ: common.o RequestChannel.o FIFORequestChannel.o MQRequestChannel.o
+	$(CXX) $(CXXFLAGS) -o server server.cpp $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o client client.cpp $^ $(LDLIBS)
+
+SHM: common.o RequestChannel.o FIFORequestChannel.o MQRequestChannel.o SHMRequestChannel.o
+	$(CXX) $(CXXFLAGS) -o server server.cpp $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o client client.cpp $^ $(LDLIBS)
 
 
-.PHONY: clean print-var test
+.PHONY: clean
 
 clean:
 	rm -f server client fifo* data*_* *.tst *.o *.csv received/*
-
-print-var:
-	echo $(OUT)
-
-test: all
-	chmod u+x pa4-tests.sh
-	./pa4-tests.sh
