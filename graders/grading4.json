@@ -28,7 +28,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 2
     },
     {
       "name": "New channel test - FIFO (1)",
@@ -38,7 +38,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 3
     },
     {
       "name": "New channel test - FIFO (2)",
@@ -48,7 +48,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 3
     },
     {
       "name": "Single datapoint test - MQ",
@@ -58,7 +58,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 2
     },
     {
       "name": "Multiple datapoint test - MQ",
@@ -68,7 +68,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 2
     },
     {
       "name": "Binary file transfer test - MQ",
@@ -78,7 +78,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 4
     },
     {
       "name": "New channel test - MQ (1)",
@@ -88,7 +88,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 6
     },
     {
       "name": "New channel test - MQ (2)",
@@ -98,7 +98,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 6
     },
     {
       "name": "Single datapoint test - SHM",
@@ -108,7 +108,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 3
     },
     {
       "name": "Multiple datapoint test - SHM",
@@ -118,7 +118,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 3
     },
     {
       "name": "Binary file transfer test - SHM",
@@ -128,7 +128,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 6
     },
     {
       "name": "New channel test - SHM (1)",
@@ -138,7 +138,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 9
     },
     {
       "name": "New channel test - SHM (2)",
@@ -148,7 +148,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 1
+      "points": 9
     }
   ]
 }
