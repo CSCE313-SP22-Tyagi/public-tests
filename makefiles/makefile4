@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-std=c++17 -g -pedantic -Wall -Wextra -fsanitize=address,undefined -fno-omit-frame-pointer
-LDLIBS=-lrt
+LDLIBS=-lpthread -lrt
 
 # 0 for output in autograder, 1 for no output in autograder
 OUT=1
