@@ -12,8 +12,8 @@
     },
     {
       "name": "Multiple datapoint test - FIFO",
-      "setup": "make -s clean; if ! make -s SHM >/dev/null 2>&1; then if ! make -s MQ >/dev/null 2>&1; then if ! make -s FIFO >/dev/null; then echo \"make failed\"; exit 1; fi; fi; fi",
-      "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i f -p 9 >/dev/null 2>&1; diff -wB <(head -n 1000 BIMDC/9.csv) received/x1.csv >/dev/null && [ $(grep 'openat(AT_FDCWD, \"fifo_control' trace.tst | wc -l) -eq $((2)) ]",
+      "setup": "mkdir received; nmake -s clean; if ! make -s SHM >/dev/null 2>&1; then if ! make -s MQ >/dev/null 2>&1; then if ! make -s FIFO >/dev/null; then echo \"make failed\"; exit 1; fi; fi; fi",
+      "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i f -p 9 >/dev/null 2>&1; head -n 1000 BIMDC/9.csv > test.csv; diff -wB test.csv received/x1.csv >/dev/null && [ $(grep 'openat(AT_FDCWD, \"fifo_control' trace.tst | wc -l) -eq $((2)) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -33,7 +33,7 @@
     {
       "name": "New channel test - FIFO (1)",
       "setup": "make -s clean; if ! make -s SHM >/dev/null 2>&1; then if ! make -s MQ >/dev/null 2>&1; then if ! make -s FIFO >/dev/null; then echo \"make failed\"; exit 1; fi; fi; fi",
-      "run": "NUMC=3; strace -e trace=mq_open,openat -o trace.tst ./client -i f -c ${NUMC} -p 9 >/dev/null 2>&1; for n in $(eval echo \"{1..${NUMC}}\"); do if [ ! diff -wB <(head -n 1000 BIMDC/9.csv) received/x$n.csv >/dev/null -o $(grep 'openat(AT_FDCWD, \"fifo_data' trace.tst | wc -l) -ne $((2*NUMC)) ]; then exit 1; fi; done; exit 0",
+      "run": "NUMC=3; strace -e trace=mq_open,openat -o trace.tst ./client -i f -c ${NUMC} -p 9 >/dev/null 2>&1; head -n 1000 BIMDC/9.csv > test.csv; for n in $(eval echo \"{1..${NUMC}}\"); do if [ ! diff -wB test.csv received/x$n.csv >/dev/null -o $(grep 'openat(AT_FDCWD, \"fifo_data' trace.tst | wc -l) -ne $((2*NUMC)) ]; then exit 1; fi; done; exit 0",
       "input": "",
       "output": "",
       "comparison": "included",
