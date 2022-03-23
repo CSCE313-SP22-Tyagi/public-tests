@@ -3,7 +3,7 @@
     {
       "name": "Set-up make",
       "setup": "",
-      "run": "MAKETYPE=0; if make SHM; then echo \"SHM success\"; MAKETYPE=3; elif make MQ; then echo \"MQ success\"; MAKETYPE=2; elif make FIFO; then echo \"FIFO success\"; MAKETYPE=1; else echo \"failure\"; fi",
+      "run": "MAKETYPE=0; if make SHM; then echo \"SHM success\"; MAKETYPE=3; elif make MQ; then echo \"MQ success\"; MAKETYPE=2; elif make FIFO; then echo \"FIFO success\"; MAKETYPE=1; else echo \"failure\"; fi; echo ${MAKETYPE}",
       "input": "",
       "output": "",
       "comparison": "included",
