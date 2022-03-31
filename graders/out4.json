@@ -1,0 +1,155 @@
+{
+    "tests": [
+      {
+        "name": "Single datapoint test - FIFO",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "VAL=$(awk -F, '$1 == \"0.096\" { print $2 }' BIMDC/14.csv); strace -e trace=mq_open,openat -o trace.tst ./client -i f -p 14 -t 0.096 -e 1 >temp; cat trace.tst; echo ${VAL}; cat temp; grep -F -- ${VAL} temp && [ $(grep 'openat(AT_FDCWD, \"fifo_control' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 1
+      },
+      {
+        "name": "Multiple datapoint test - FIFO",
+        "setup": "mkdir received; make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i f -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; diff -wB test.csv received/x1.csv && [ $(grep 'openat(AT_FDCWD, \"fifo_control' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 1
+      },
+      {
+        "name": "Binary file transfer test - FIFO",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi; truncate -s 256K BIMDC/test.bin",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i f -f test.bin -m 512; cat trace.tst; diff BIMDC/test.bin received/test.bin && [ $(grep 'openat(AT_FDCWD, \"fifo_control' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 2
+      },
+      {
+        "name": "New channel test - FIFO (1)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=3; strace -e trace=mq_open,openat -o trace.tst ./client -i f -c ${NUMC} -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; for n in $(eval echo \"{1..${NUMC}}\"); do if ! diff -wB test.csv received/x$n.csv || [ $(grep 'openat(AT_FDCWD, \"fifo_data' trace.tst | wc -l) -ne $((2*NUMC)) ]; then exit 1; fi; done; exit 0",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 3
+      },
+      {
+        "name": "New channel test - FIFO (2)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=10; strace -e trace=mq_open,openat -o trace.tst ./client -i f -c ${NUMC} -f 10.csv -m 1024; cat trace.tst; diff BIMDC/10.csv received/10.csv && [ $(grep 'openat(AT_FDCWD, \"fifo_data' trace.tst | wc -l) -eq $((2*NUMC)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 3
+      },
+      {
+        "name": "Single datapoint test - MQ",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "VAL=$(awk -F, '$1 == \"0.096\" { print $2 }' BIMDC/14.csv); strace -e trace=mq_open,openat -o trace.tst ./client -i q -p 14 -t 0.096 -e 1 >temp; cat trace.tst; echo ${VAL}; cat temp; grep -F -- ${VAL} temp && [ $(grep 'mq_open(' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 2
+      },
+      {
+        "name": "Multiple datapoint test - MQ",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i q -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; diff -wB test.csv received/x1.csv && [ $(grep 'mq_open(' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 2
+      },
+      {
+        "name": "Binary file transfer test - MQ",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi; truncate -s 256K BIMDC/test.bin",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i q -f test.bin -m 512; cat trace.tst; diff BIMDC/test.bin received/test.bin && [ $(grep 'mq_open(' trace.tst | wc -l) -eq $((2)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 4
+      },
+      {
+        "name": "New channel test - MQ (1)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=3; strace -e trace=mq_open,openat -o trace.tst ./client -i q -c ${NUMC} -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; for n in $(eval echo \"{1..${NUMC}}\"); do if ! diff -wB test.csv received/x$n.csv || [ $(grep 'mq_open(' trace.tst | wc -l) -ne $((2*(NUMC+1))) ]; then exit 1; fi; done; exit 0",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 6
+      },
+      {
+        "name": "New channel test - MQ (2)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=10; strace -e trace=mq_open,openat -o trace.tst ./client -i q -c ${NUMC} -f 10.csv -m 1024; cat trace.tst; diff BIMDC/10.csv received/10.csv && [ $(grep 'mq_open(' trace.tst | wc -l) -eq $((2*(NUMC+1))) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 6
+      },
+      {
+        "name": "Single datapoint test - SHM",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "VAL=$(awk -F, '$1 == \"0.096\" { print $2 }' BIMDC/14.csv); strace -e trace=mq_open,openat -o trace.tst ./client -i s -p 14 -t 0.096 -e 1 >temp; cat trace.tst; echo ${VAL}; cat temp; grep -F -- ${VAL} temp && [ $(grep 'openat(AT_FDCWD, \"/dev/shm/' trace.tst | wc -l) -eq $((10)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 3
+      },
+      {
+        "name": "Multiple datapoint test - SHM",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i s -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; diff -wB test.csv received/x1.csv && [ $(grep 'openat(AT_FDCWD, \"/dev/shm/' trace.tst | wc -l) -eq $((10)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 3
+      },
+      {
+        "name": "Binary file transfer test - SHM",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi; truncate -s 256K BIMDC/test.bin",
+        "run": "strace -e trace=mq_open,openat -o trace.tst ./client -i s -f test.bin -m 512; cat trace.tst; diff BIMDC/test.bin received/test.bin && [ $(grep 'openat(AT_FDCWD, \"/dev/shm/' trace.tst | wc -l) -eq $((10)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 6
+      },
+      {
+        "name": "New channel test - SHM (1)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=3; strace -e trace=mq_open,openat -o trace.tst ./client -i s -c ${NUMC} -p 9; cat trace.tst; head -n 1000 BIMDC/9.csv > test.csv; for n in $(eval echo \"{1..${NUMC}}\"); do if ! diff -wB test.csv received/x$n.csv || [ $(grep 'openat(AT_FDCWD, \"/dev/shm/' trace.tst | wc -l) -ne $((6*NUMC+10)) ]; then exit 1; fi; done; exit 0",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 9
+      },
+      {
+        "name": "New channel test - SHM (2)",
+        "setup": "make clean; if ! make SHM; then if ! make MQ; then if ! make FIFO; then echo \"make failed\"; exit 1; fi; fi; fi",
+        "run": "NUMC=10; strace -e trace=mq_open,openat -o trace.tst ./client -i s -c ${NUMC} -f 10.csv -m 1024; cat trace.tst; diff BIMDC/10.csv received/10.csv && [ $(grep 'openat(AT_FDCWD, \"/dev/shm/' trace.tst | wc -l) -eq $((6*NUMC+10)) ]",
+        "input": "",
+        "output": "",
+        "comparison": "included",
+        "timeout": 1,
+        "points": 9
+      }
+    ]
+  }
+  
