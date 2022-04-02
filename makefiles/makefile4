@@ -26,5 +26,5 @@ SHM: common.o RequestChannel.o FIFORequestChannel.o MQRequestChannel.o SHMReques
 
 clean:
 	rm -f server client fifo* data*_* *.tst *.o *.csv received/*
-	find /dev/mqueue/ -user ec2-user -exec rm {} + 2>/dev/null
-	find /dev/shm/ -user ec2-user -exec rm {} + 2>/dev/null
+	rm -f /dev/mqueue/*data*_* /dev/mqueue/*control*
+	rm -f /dev/shm/*data*_* /dev/shm/*control*
