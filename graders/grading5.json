@@ -3,7 +3,7 @@
     {
       "name": "Histogram (1)",
       "setup": "make -s >/dev/null 2>&1",
-      "run": "./server -r 8080 >/dev/null 2>&1 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst 2>/dev/null; kill $! 2>/dev/null && [ $(wait $! 2>/dev/null || echo $?) -eq 143 ] && [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
+      "run": "./server -r 8080 >/dev/null 2>&1 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst 2>/dev/null; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -13,7 +13,7 @@
     {
       "name": "Histogram (2)",
       "setup": "make -s >/dev/null 2>&1",
-      "run": "./server -r 8081 >/dev/null 2>&1 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst 2>/dev/null; kill $! 2>/dev/null && [ $(wait $! 2>/dev/null || echo $?) -eq 143 ] && [ $(comm -12 out.tst test-files/data2.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
+      "run": "./server -r 8081 >/dev/null 2>&1 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst 2>/dev/null; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data2.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -23,7 +23,7 @@
     {
       "name": "CSV File Transfer",
       "setup": "mkdir -p received/; make -s >/dev/null 2>&1",
-      "run": "./server -r 8082 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8082 -w 100 -b 30 -f 1.csv >/dev/null 2>&1; kill $! 2>/dev/null && [ $(wait $! 2>/dev/null || echo $?) -eq 143 ] && diff BIMDC/1.csv received/1.csv >/dev/null 2>&1",
+      "run": "./server -r 8082 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8082 -w 100 -b 30 -f 1.csv >/dev/null 2>&1; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/1.csv received/1.csv >/dev/null 2>&1",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -33,7 +33,7 @@
     {
       "name": "Binary File Transfer",
       "setup": "make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./server -r 8083 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8083 -w 100 -b 50 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null && [ $(wait $! 2>/dev/null || echo $?) -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
+      "run": "./server -r 8083 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8083 -w 100 -b 50 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -43,7 +43,7 @@
     {
       "name": "Binary File Transfer - Large Message Capacity",
       "setup": "make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./server -r 8084 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null && [ $(wait $! 2>/dev/null || echo $?) -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
+      "run": "./server -r 8084 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
       "input": "",
       "output": "",
       "comparison": "included",
