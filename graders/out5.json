@@ -3,7 +3,7 @@
     {
       "name": "Histogram (1)",
       "setup": "make",
-      "run": "./server -r 8080 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst; comm out.tst test-files/data1.txt; kill $!; echo $?; wait $!; echo $?; [ 1 -eq 143 ]; echo $?; [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
+      "run": "./server -r 8080 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst; comm out.tst test-files/data1.txt; kill $!; echo $?; wait $!; TEMP=$(echo $?); echo ${TEMP}; [ 1 -eq 143 ]; echo $?; [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
