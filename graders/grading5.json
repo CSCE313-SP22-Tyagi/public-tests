@@ -43,7 +43,7 @@
     {
       "name": "Binary File Transfer - Large Message Capacity",
       "setup": "make -s >/dev/null 2>&1; truncate -s 256K BIMDC/test.bin",
-      "run": "./server -r 8084 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
+      "run": "./server -r 8084 -m 4096 >/dev/null 2>&1 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin >/dev/null 2>&1; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin >/dev/null 2>&1",
       "input": "",
       "output": "",
       "comparison": "included",
