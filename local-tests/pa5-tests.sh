@@ -94,9 +94,9 @@ fi
 kill $! 2>/dev/null
 wait $! 2>/dev/null
 
-echo -e "\nTesting :: ./server -r 8084 & truncate -s 256K BIMDC/test.bin; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin; diff -sqwB BIMDC/test.bin received/test.bin\n"
+echo -e "\nTesting :: ./server -r 8084 -m 4096 & truncate -s 256K BIMDC/test.bin; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin; diff -sqwB BIMDC/test.bin received/test.bin\n"
 truncate -s 256K BIMDC/test.bin
-./server -r 8084 -m 8192 >/dev/null &
+./server -r 8084 -m 4096 >/dev/null &
 sleep 1
 ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin >/dev/null
 if test -f "received/test.bin"; then
