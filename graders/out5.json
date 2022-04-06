@@ -3,7 +3,7 @@
     {
       "name": "Histogram (1)",
       "setup": "make",
-      "run": "./server -r 8080 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst; comm out.tst test-files/data1.txt; kill $!; echo $?; wait $!; TEMP=$(echo $?); echo ${TEMP}; [ 1 -eq 143 ]; echo $?; [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
+      "run": "./server -r 8080 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst; comm out.tst test-files/data1.txt; kill $!; KILLSTAT=$(echo $?); wait $!; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -13,7 +13,7 @@
     {
       "name": "Histogram (2)",
       "setup": "make",
-      "run": "./server -r 8081 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst; comm out.tst test-files/data2.txt; kill $! && [ $(wait $! || echo $?) -eq 143 ] && [ $(comm -12 out.tst test-files/data2.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
+      "run": "./server -r 8081 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst; comm out.tst test-files/data2.txt; kill $!; KILLSTAT=$(echo $?); wait $!; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data2.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -23,7 +23,7 @@
     {
       "name": "CSV File Transfer",
       "setup": "mkdir -p received/; make",
-      "run": "./server -r 8082 & sleep 1; ./client -a 127.0.0.1 -r 8082 -w 100 -b 30 -f 1.csv; kill $! && [ $(wait $! || echo $?) -eq 143 ] && diff BIMDC/1.csv received/1.csv",
+      "run": "./server -r 8082 & sleep 1; ./client -a 127.0.0.1 -r 8082 -w 100 -b 30 -f 1.csv; kill $!; KILLSTAT=$(echo $?); wait $!; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/1.csv received/1.csv",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -33,7 +33,7 @@
     {
       "name": "Binary File Transfer",
       "setup": "make; truncate -s 256K BIMDC/test.bin",
-      "run": "./server -r 8083 & sleep 1; ./client -a 127.0.0.1 -r 8083 -w 100 -b 50 -f test.bin; kill $! && [ $(wait $! || echo $?) -eq 143 ] && diff BIMDC/test.bin received/test.bin",
+      "run": "./server -r 8083 & sleep 1; ./client -a 127.0.0.1 -r 8083 -w 100 -b 50 -f test.bin; kill $!; KILLSTAT=$(echo $?); wait $!; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -43,7 +43,7 @@
     {
       "name": "Binary File Transfer - Large Message Capacity",
       "setup": "make; truncate -s 256K BIMDC/test.bin",
-      "run": "./server -r 8084 -m 4096 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin; kill $! && [ $(wait $! || echo $?) -eq 143 ] && diff BIMDC/test.bin received/test.bin",
+      "run": "./server -r 8084 -m 4096 & sleep 1; ./client -a 127.0.0.1 -r 8084 -w 100 -b 50 -m 4096 -f test.bin; kill $!; KILLSTAT=$(echo $?); wait $!; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && diff BIMDC/test.bin received/test.bin",
       "input": "",
       "output": "",
       "comparison": "included",
