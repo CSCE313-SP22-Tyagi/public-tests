@@ -3,7 +3,7 @@
     {
       "name": "Histogram (1)",
       "setup": "make -s >/dev/null 2>&1",
-      "run": "./server -r 8080 >/dev/null 2>&1 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst 2>/dev/null; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data1.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
+      "run": "./server -r 8080 >/dev/null 2>&1 & sleep 1; N=1000; P=5; ./client -a 127.0.0.1 -r 8080 -n ${N} -p ${P} -w 100 -h 20 -b 5 >out.tst 2>/dev/null; sort out.tst >sorted-out.tst; sort test-files/data1.txt >sorted-data.txt; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 sorted-out.tst sorted-data.txt | wc -l) -eq $(cat test-files/data1.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
@@ -13,7 +13,7 @@
     {
       "name": "Histogram (2)",
       "setup": "make -s >/dev/null 2>&1",
-      "run": "./server -r 8081 >/dev/null 2>&1 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst 2>/dev/null; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 out.tst test-files/data2.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
+      "run": "./server -r 8081 >/dev/null 2>&1 & sleep 1; N=10000; P=10; ./client -a 127.0.0.1 -r 8081 -n ${N} -p ${P} -w 100 -h 20 -b 30 >out.tst 2>/dev/null; sort out.tst >sorted-out.tst; sort test-files/data2.txt >sorted-data.txt; kill $! 2>/dev/null; KILLSTAT=$(echo $?); wait $! 2>/dev/null; WAITSTAT=$(echo $?); [ ${KILLSTAT} -eq 0 ] && [ ${WAITSTAT} -eq 143 ] && [ $(comm -12 sorted-out.tst sorted-data.txt | wc -l) -eq $(cat test-files/data2.txt | wc -l) ]",
       "input": "",
       "output": "",
       "comparison": "included",
