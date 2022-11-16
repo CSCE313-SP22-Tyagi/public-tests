@@ -42,8 +42,8 @@
     },
     {
       "name": "Histogram (1)",
-      "setup": "make -s >/dev/null 2>&1",
-      "run": "N=1000; P=5; ./client -n ${N} -p ${P} -w 100 -h 20 -b 5; ./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep oFw ${N}; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]",
+      "setup": "make -s >/dev/null 2>&1; echo \"compiled\"",
+      "run": "N=1000; P=5; echo hi; ./client -n ${N} -p ${P} -w 100 -h 20 -b 5; echo hi again; ./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep oFw ${N}; echo testing; [ $(./client -n ${N} -p ${P} -w 100 -h 20 -b 5 | grep -oFw ${N} | wc -l) -eq ${P} ]",
       "input": "",
       "output": "",
       "comparison": "included",
